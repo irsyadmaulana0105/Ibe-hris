@@ -1,0 +1,30 @@
+# Rahasia dan kredensial lokal - JANGAN PERNAH dikomit
+KREDENSIAL-LOKAL.txt
+.env
+.env.local
+.env.*.local
+auth.json
+
+# Database lokal dan berkas data (berisi data uji, termasuk foto wajah bila Anda mencoba pendaftaran wajah)
+*.sqlite
+*.sqlite3
+
+# Dependensi dan hasil build
+node_modules/
+vendor/
+dist/
+backend/public/build/
+backend/public/hot
+backend/public/storage
+
+# Berkas sistem dan editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+*.tsbuildinfo
+
+# Hasil patch yang dikirim ke tim IBE
+patch-hris/
+patch-hris.zip
