@@ -1,0 +1,31 @@
+{
+  "$schema": "https://www.schemastore.org/package.json",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:vite": "vite",
+    "dev": "concurrently -k --names vite,face --prefix-colors green,cyan \"npm:dev:vite\" \"npm:face:engine\"",
+    "face:engine": "node ml-face/server.cjs",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "axios": "^1.11.0",
+    "concurrently": "^9.0.1",
+    "laravel-echo": "^2.3.4",
+    "laravel-vite-plugin": "^2.0.1",
+    "postcss": "^8.4.49",
+    "pusher-js": "^8.5.0",
+    "tailwindcss": "^3.4.17",
+    "vite": "^7.3.0"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs-backend-cpu": "^4.22.0",
+    "@tensorflow/tfjs-backend-wasm": "^4.22.0",
+    "@tensorflow/tfjs-converter": "^4.22.0",
+    "@tensorflow/tfjs-core": "^4.22.0",
+    "@vladmandic/human": "^3.3.6",
+    "jpeg-js": "^0.4.4",
+    "pngjs": "^7.0.0"
+  }
+}

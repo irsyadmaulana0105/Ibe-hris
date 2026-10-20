@@ -1,0 +1,33 @@
+{
+  "schema": "ibe.local-font-assets",
+  "version": 1,
+  "packages": [
+    {
+      "package": "@fontsource/rubik",
+      "version": "5.3.0",
+      "licenseSha256": "46a250495a963b0b84f2736c0185d0e3af8df9d23427bd425b92a8ece020283c",
+      "fonts": [
+        [
+          "files/rubik-latin-300-normal.woff2",
+          "0e5f00fa0d53d31d213370e03af3899e809f04a921760c94a1825a376d971864"
+        ],
+        [
+          "files/rubik-latin-400-normal.woff2",
+          "82ac0e78285c43d0cd203427c57ab30fb07b18f8e6166045f729442eb1abfa26"
+        ],
+        [
+          "files/rubik-latin-500-normal.woff2",
+          "54ad302324aa8000449efd8643186deb46777f0ca4d97f10deb9333536933613"
+        ],
+        [
+          "files/rubik-latin-600-normal.woff2",
+          "6182043a20faf3fe1a8f0e2c7c964009e11de5e09852617fef3517cbf3c35513"
+        ],
+        [
+          "files/rubik-latin-700-normal.woff2",
+          "e423f8ae1668156addf5e32f1056d5b22b5b113a9a23afd364df84a6fa88602d"
+        ]
+      ]
+    }
+  ]
+}

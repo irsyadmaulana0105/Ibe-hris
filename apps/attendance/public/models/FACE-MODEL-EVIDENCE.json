@@ -1,0 +1,21 @@
+{
+  "schema": "ibe.local-face-model-assets",
+  "version": 1,
+  "package": {
+    "name": "@vladmandic/face-api",
+    "version": "1.7.15",
+    "licenseSha256": "9a3442b79acaf4fbc7c2e07b7e2d8f84af9bb3871bf08a69d80304ab00640e9a"
+  },
+  "assets": [
+    {
+      "sourceRelative": "model/tiny_face_detector_model-weights_manifest.json",
+      "outputName": "tiny_face_detector_model-weights_manifest.json",
+      "sha256": "5d1af4849ac48d5b985f4a9b16010c512353ddd6fcc63d50fd0bc9e9e64296e5"
+    },
+    {
+      "sourceRelative": "model/tiny_face_detector_model.bin",
+      "outputName": "tiny_face_detector_model.bin",
+      "sha256": "b7503ce7df31039b1c43316a9b865cab6a70dd748cc602d3fa28b551503c3871"
+    }
+  ]
+}

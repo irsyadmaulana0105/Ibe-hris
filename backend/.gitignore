@@ -1,0 +1,31 @@
+.env
+.env.backup
+.env.*.local
+
+vendor/
+node_modules/
+
+public/build/
+public/hot
+public/storage/
+public/app/
+public/erp-next/
+
+storage/*.key
+storage/pail/
+bootstrap/cache/*.php
+
+.phpunit.result.cache
+.phpunit.cache/
+auth.json
+
+*.log
+.DS_Store
+Thumbs.db
+
+# Old project folder
+/absen baru/
+
+# Google Drive service account credentials (sensitive)
+/storage/app/google-credentials.json
+/storage/app/google-credentials.*.json

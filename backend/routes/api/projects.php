@@ -1,0 +1,82 @@
+<?php
+
+use App\Http\Controllers\Api\V1\GoalController;
+use App\Http\Controllers\Api\V1\LabelController;
+use App\Http\Controllers\Api\V1\ProjectController;
+use App\Http\Controllers\Api\V1\ProjectMemberController;
+use App\Http\Controllers\Api\V1\ProjectNotificationController;
+use App\Http\Controllers\Api\V1\SprintController;
+use App\Http\Controllers\Api\V1\TaskAttachmentController;
+use App\Http\Controllers\Api\V1\TaskCommentController;
+use App\Http\Controllers\Api\V1\TaskDependencyController;
+use App\Http\Controllers\Api\V1\WorkspaceController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/projects', [ProjectController::class, 'index']);
+Route::post('/projects', [ProjectController::class, 'store']);
+Route::get('/projects/{project}', [ProjectController::class, 'show']);
+Route::put('/projects/{project}', [ProjectController::class, 'update']);
+Route::get('/projects/{project}/tasks/{task}', [ProjectController::class, 'showTask']);
+Route::post('/projects/{project}/tasks', [ProjectController::class, 'storeTask']);
+Route::post('/projects/{project}/tasks/bulk', [ProjectController::class, 'bulkUpdateTasks']);
+Route::put('/projects/{project}/tasks/{task}', [ProjectController::class, 'updateTask']);
+Route::delete('/projects/{project}/tasks/{task}', [ProjectController::class, 'destroyTask']);
+Route::get('/projects/{project}/tasks/{task}/comments', [TaskCommentController::class, 'index']);
+Route::post('/projects/{project}/tasks/{task}/comments', [TaskCommentController::class, 'store']);
+Route::delete('/projects/{project}/tasks/{task}/comments/{comment}', [TaskCommentController::class, 'destroy']);
+Route::get('/projects/{project}/sprints', [SprintController::class, 'index']);
+Route::post('/projects/{project}/sprints', [SprintController::class, 'store']);
+Route::put('/projects/{project}/sprints/{sprint}', [SprintController::class, 'update']);
+Route::delete('/projects/{project}/sprints/{sprint}', [SprintController::class, 'destroy']);
+Route::post('/projects/{project}/sprints/{sprint}/start', [SprintController::class, 'start']);
+Route::post('/projects/{project}/sprints/{sprint}/complete', [SprintController::class, 'complete']);
+Route::get('/projects/{project}/members', [ProjectMemberController::class, 'index']);
+Route::get('/projects/{project}/members/available', [ProjectMemberController::class, 'available']);
+Route::post('/projects/{project}/members', [ProjectMemberController::class, 'store']);
+Route::put('/projects/{project}/members/{member}', [ProjectMemberController::class, 'update']);
+Route::delete('/projects/{project}/members/{member}', [ProjectMemberController::class, 'destroy']);
+Route::get('/projects/{project}/labels', [LabelController::class, 'index']);
+Route::post('/projects/{project}/labels', [LabelController::class, 'store']);
+Route::put('/projects/{project}/labels/{label}', [LabelController::class, 'update']);
+Route::delete('/projects/{project}/labels/{label}', [LabelController::class, 'destroy']);
+Route::post('/projects/{project}/archive', [ProjectController::class, 'archive']);
+Route::post('/projects/{project}/unarchive', [ProjectController::class, 'unarchive']);
+Route::delete('/projects/{project}', [ProjectController::class, 'destroy']);
+Route::get('/projects/{project}/export.xlsx', [\App\Http\Controllers\Api\V1\ProjectSpreadsheetController::class, 'exportTasks']);
+Route::get('/projects/{project}/template.xlsx', [\App\Http\Controllers\Api\V1\ProjectSpreadsheetController::class, 'templateTasks']);
+Route::post('/projects/{project}/import.xlsx', [\App\Http\Controllers\Api\V1\ProjectSpreadsheetController::class, 'importTasks']);
+
+if (config('features.project_budget')) {
+    Route::get('/projects/{project}/budget', [\App\Http\Controllers\Api\V1\ProjectBudgetController::class, 'show']);
+    Route::put('/projects/{project}/budget', [\App\Http\Controllers\Api\V1\ProjectBudgetController::class, 'update']);
+    Route::post('/projects/{project}/budget/items', [\App\Http\Controllers\Api\V1\ProjectBudgetController::class, 'storeItem']);
+    Route::put('/projects/{project}/budget/items/{item}', [\App\Http\Controllers\Api\V1\ProjectBudgetController::class, 'updateItem']);
+    Route::delete('/projects/{project}/budget/items/{item}', [\App\Http\Controllers\Api\V1\ProjectBudgetController::class, 'destroyItem']);
+    Route::post('/projects/{project}/budget/items/{item}/progress', [\App\Http\Controllers\Api\V1\ProjectBudgetController::class, 'storeProgress']);
+    Route::post('/projects/{project}/budget/submit', [\App\Http\Controllers\Api\V1\ProjectBudgetController::class, 'submit']);
+    Route::post('/projects/{project}/budget/decision', [\App\Http\Controllers\Api\V1\ProjectBudgetController::class, 'decide']);
+    Route::get('/projects/{project}/budget/export.xlsx', [\App\Http\Controllers\Api\V1\ProjectSpreadsheetController::class, 'exportBudget']);
+    Route::get('/projects/{project}/budget/template.xlsx', [\App\Http\Controllers\Api\V1\ProjectSpreadsheetController::class, 'templateBudget']);
+    Route::post('/projects/{project}/budget/import.xlsx', [\App\Http\Controllers\Api\V1\ProjectSpreadsheetController::class, 'importBudget']);
+}
+
+Route::get('/goals', [GoalController::class, 'index']);
+Route::post('/goals', [GoalController::class, 'store']);
+Route::get('/goals/{goal}', [GoalController::class, 'show']);
+Route::put('/goals/{goal}', [GoalController::class, 'update']);
+Route::delete('/goals/{goal}', [GoalController::class, 'destroy']);
+Route::get('/workspace/my-tasks', [WorkspaceController::class, 'myTasks']);
+Route::get('/workspace/dashboard', [WorkspaceController::class, 'dashboard']);
+Route::get('/project-notifications/poll', [ProjectNotificationController::class, 'poll']);
+Route::get('/project-notifications', [ProjectNotificationController::class, 'index']);
+Route::post('/project-notifications/read-all', [ProjectNotificationController::class, 'markAllRead']);
+Route::get('/project-notifications/preferences', [ProjectNotificationController::class, 'getPreferences']);
+Route::put('/project-notifications/preferences', [ProjectNotificationController::class, 'updatePreferences']);
+Route::post('/project-notifications/{notification}/read', [ProjectNotificationController::class, 'markRead']);
+Route::delete('/project-notifications/{notification}', [ProjectNotificationController::class, 'destroy']);
+Route::get('/projects/{project}/tasks/{task}/attachments', [TaskAttachmentController::class, 'index']);
+Route::post('/projects/{project}/tasks/{task}/attachments', [TaskAttachmentController::class, 'store']);
+Route::get('/projects/{project}/tasks/{task}/attachments/{attachment}/stream', [TaskAttachmentController::class, 'stream']);
+Route::delete('/projects/{project}/tasks/{task}/attachments/{attachment}', [TaskAttachmentController::class, 'destroy']);
+Route::post('/projects/{project}/tasks/{task}/dependencies', [TaskDependencyController::class, 'store']);
+Route::delete('/projects/{project}/tasks/{task}/dependencies/{dep}', [TaskDependencyController::class, 'destroy']);
