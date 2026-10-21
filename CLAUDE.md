@@ -49,7 +49,7 @@ npx tsc -b           # cek tipe
 npm run build        # build produksi
 ```
 
-`npm run lint` belum berfungsi (tidak ada `eslint.config.js`). Lima uji bisa gagal karena lingkungan, bukan regresi: empat di `InviteTokenApiTest` (kata sandi uji tercatat bocor, gagal bila ada internet) dan satu di `HardwarePushSecurityTest` (butuh PHP 8.4). Daftar temuan dan statusnya ada di `docs/TEMUAN.md`; cek di sana sebelum memperbaiki sesuatu yang mungkin sudah tercatat.
+`npm run lint` belum berfungsi (tidak ada `eslint.config.js`). Satu uji bisa gagal karena lingkungan, bukan regresi: `HardwarePushSecurityTest` (butuh PHP 8.4). Kata sandi di uji harus unik, bukan yang umum seperti `password123`: aplikasi menolak kata sandi yang tercatat bocor (pemeriksaan ke API publik), dan uji akan gagal bila ada internet. Daftar temuan dan statusnya ada di `docs/TEMUAN.md`; cek di sana sebelum memperbaiki sesuatu yang mungkin sudah tercatat.
 
 ## Peta cepat
 

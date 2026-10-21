@@ -17,7 +17,7 @@ Cara pemeriksaan: aplikasi dijalankan dengan data contoh, 34 halaman dibuka seba
 | T7 | Sedang | Kontras tema: sidebar tema terang nyaris tak terbaca; tombol gelap menyatu di tema malam | Diperbaiki (patch tersendiri) |
 | T8 | Rendah | Foto hasil jepretan tidak dicerminkan, berbeda dari pratinjau kamera | Diperbaiki |
 | T9 | Rendah | `npm run lint` tidak berfungsi | Terbuka |
-| T10 | Rendah | Empat uji `InviteTokenApiTest` memakai kata sandi yang tercatat bocor | Terbuka |
+| T10 | Rendah | Empat uji `InviteTokenApiTest` memakai kata sandi yang tercatat bocor | Diperbaiki |
 | T11 | Rendah | Satu uji (`HardwarePushSecurityTest`) membutuhkan PHP 8.4 | Terbuka (lingkungan) |
 | T12 | Rendah | Komentar umur token tidak sesuai konfigurasi | Terbuka |
 | T13 | Sedang | Kamera gagal dengan "backend 'wasm' has not yet been initialized" bila WebGL tidak tersedia | Diperbaiki, direproduksi dan diuji |
@@ -72,7 +72,7 @@ Pratinjau kamera sudah dicerminkan, tetapi foto hasil jepretan yang ditampilkan 
 ### T9 sampai T12. Catatan lama
 
 - **T9:** tidak ada `eslint.config.js`, sehingga `npm run lint` gagal. Menambahkannya kemungkinan memerlukan `typescript-eslint` dan `globals` sebagai devDependencies.
-- **T10:** empat uji memakai kata sandi `newpassword123` dan kawan-kawannya yang ditolak aplikasi karena tercatat bocor, sehingga gagal bila mesin bisa menjangkau API pemeriksaan. Perbaikan: ganti kata sandi uji dengan yang unik.
+- **T10 (diperbaiki):** empat uji memakai kata sandi `newpassword123` dan kawan-kawannya yang ditolak aplikasi karena tercatat bocor, sehingga gagal bila mesin bisa menjangkau API pemeriksaan. Kata sandi uji kini unik (`InviteTokenApiTest.php`). Temuan tambahan: uji "token dipakai ulang" dan "token lama" hanya memeriksa status 422, sehingga bisa lulus karena kata sandinya ditolak, bukan karena tokennya. Keduanya kini juga memeriksa galat pada `token`.
 - **T11:** `HardwarePushSecurityTest` memakai fungsi yang hanya ada di PHP 8.4. Lulus di PHP 8.4.
 - **T12:** komentar di `routes/console.php` menyebut token 8 jam, sedangkan konfigurasi bawaannya 60 menit. Anggap konfigurasi sebagai acuan.
 
@@ -87,4 +87,4 @@ Pratinjau kamera sudah dicerminkan, tetapi foto hasil jepretan yang ditampilkan 
 
 ## Hasil uji otomatis terakhir
 
-477 lulus, 1 dilewati, 5 gagal. Lima kegagalan itu adalah T10 (empat) dan T11 (satu), semuanya karena lingkungan penguji (kata sandi bocor dan PHP 8.3), bukan karena perubahan di dokumen ini. Uji absensi: 17 lulus.
+481 lulus, 1 dilewati, 1 gagal. Satu kegagalan itu adalah T11 (`HardwarePushSecurityTest`, butuh PHP 8.4), karena lingkungan penguji (PHP 8.3), bukan karena kode. Uji absensi: 17 lulus. Uji undangan: 10 lulus.

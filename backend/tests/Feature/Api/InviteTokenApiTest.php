@@ -58,8 +58,8 @@ it('employee can accept invite and receives an auth token', function () {
 
     $this->postJson('/api/v1/auth/accept-invite', [
         'token'                 => $plainToken,
-        'password'              => 'newpassword123',
-        'password_confirmation' => 'newpassword123',
+        'password'              => 'Zq7-kuda-laut-84-bintang',
+        'password_confirmation' => 'Zq7-kuda-laut-84-bintang',
     ])
         ->assertOk()
         ->assertJsonStructure(['data' => ['token', 'token_type', 'user']])
@@ -68,9 +68,9 @@ it('employee can accept invite and receives an auth token', function () {
     // Token must be consumed - same token cannot be reused
     $this->postJson('/api/v1/auth/accept-invite', [
         'token'                 => $plainToken,
-        'password'              => 'anotherpassword',
-        'password_confirmation' => 'anotherpassword',
-    ])->assertUnprocessable();
+        'password'              => 'Wn9-cahaya-pagi-27-sawah',
+        'password_confirmation' => 'Wn9-cahaya-pagi-27-sawah',
+    ])->assertUnprocessable()->assertJsonValidationErrors('token');
 });
 
 it('employee can login with the new password after accepting invite', function () {
@@ -85,21 +85,21 @@ it('employee can login with the new password after accepting invite', function (
 
     $this->postJson('/api/v1/auth/accept-invite', [
         'token'                 => $plainToken,
-        'password'              => 'myfinalpassword',
-        'password_confirmation' => 'myfinalpassword',
+        'password'              => 'Pj3-ombak-senja-52-karang',
+        'password_confirmation' => 'Pj3-ombak-senja-52-karang',
     ])->assertOk();
 
     $this->postJson('/api/v1/auth/login', [
         'identifier' => 'newhire@example.test',
-        'password'   => 'myfinalpassword',
+        'password'   => 'Pj3-ombak-senja-52-karang',
     ])->assertOk()->assertJsonPath('data.token_type', 'Bearer');
 });
 
 it('rejects invalid invite token with 422', function () {
     $this->postJson('/api/v1/auth/accept-invite', [
         'token'                 => 'invalid-token-that-does-not-exist',
-        'password'              => 'newpassword123',
-        'password_confirmation' => 'newpassword123',
+        'password'              => 'Zq7-kuda-laut-84-bintang',
+        'password_confirmation' => 'Zq7-kuda-laut-84-bintang',
     ])->assertUnprocessable()
       ->assertJsonValidationErrors('token');
 });
@@ -118,8 +118,8 @@ it('rejects expired invite token', function () {
 
     $this->postJson('/api/v1/auth/accept-invite', [
         'token'                 => $plainToken,
-        'password'              => 'newpassword123',
-        'password_confirmation' => 'newpassword123',
+        'password'              => 'Zq7-kuda-laut-84-bintang',
+        'password_confirmation' => 'Zq7-kuda-laut-84-bintang',
     ])->assertUnprocessable()
       ->assertJsonValidationErrors('token');
 });
@@ -130,7 +130,7 @@ it('rejects mismatched password confirmation', function () {
 
     $this->postJson('/api/v1/auth/accept-invite', [
         'token'                 => $plainToken,
-        'password'              => 'password123',
+        'password'              => 'Hk4-sungai-fajar-61-batu',
         'password_confirmation' => 'different456',
     ])->assertUnprocessable()
       ->assertJsonValidationErrors('password');
@@ -163,9 +163,9 @@ it('admin can regenerate invite token for an employee', function () {
     // Old token is now invalid
     $this->postJson('/api/v1/auth/accept-invite', [
         'token'                 => $firstInvite,
-        'password'              => 'password123',
-        'password_confirmation' => 'password123',
-    ])->assertUnprocessable();
+        'password'              => 'Hk4-sungai-fajar-61-batu',
+        'password_confirmation' => 'Hk4-sungai-fajar-61-batu',
+    ])->assertUnprocessable()->assertJsonValidationErrors('token');
 });
 
 it('regular employees cannot regenerate invite tokens', function () {

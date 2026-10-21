@@ -161,10 +161,9 @@ cd apps\attendance; npm run build                                   # pastikan b
 
 Skrip `npm run lint` di aplikasi absensi saat ini belum berfungsi (ESLint 9 tidak menemukan berkas konfigurasi `eslint.config.js`), jadi pemeriksaan otomatis sisi frontend hanya `tsc` dan `build`.
 
-`memory_limit=1G` diperlukan karena batas bawaan PHP di Windows (128 MB) tidak cukup untuk seluruh suite. Hasil terakhir (21 Oktober 2026, setelah lima uji geofence ditambahkan): 477 lulus, 1 dilewati (uji konfigurasi server yang tidak ikut paket), dan 5 gagal karena lingkungan penguji, bukan karena kode:
+`memory_limit=1G` diperlukan karena batas bawaan PHP di Windows (128 MB) tidak cukup untuk seluruh suite. Hasil terakhir (21 Oktober 2026): 481 lulus, 1 dilewati (uji konfigurasi server yang tidak ikut paket), dan 1 gagal karena lingkungan penguji, bukan karena kode: satu uji di `HardwarePushSecurityTest` memakai fungsi yang baru ada di PHP 8.4, jadi gagal di PHP 8.3 dan lulus di 8.4.
 
-- Empat uji di `InviteTokenApiTest` memakai kata sandi `newpassword123` dan sejenisnya, sedangkan aplikasi menolak kata sandi yang pernah bocor lewat pemeriksaan ke API publik. Pada mesin yang bisa menjangkau API tersebut, keempatnya gagal. Abaikan, atau jalankan uji tanpa internet.
-- Satu uji di `HardwarePushSecurityTest` memakai fungsi yang baru ada di PHP 8.4, jadi gagal di PHP 8.3 dan lulus di 8.4.
+Kata sandi uji harus unik. Aplikasi menolak kata sandi yang pernah bocor lewat pemeriksaan ke API publik, sehingga kata sandi umum seperti `newpassword123` membuat uji gagal pada mesin yang bisa menjangkau API itu.
 
 Daftar lengkap temuan dan statusnya ada di [docs/TEMUAN.md](docs/TEMUAN.md).
 
