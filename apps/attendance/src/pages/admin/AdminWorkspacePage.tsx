@@ -81,7 +81,7 @@ export default function AdminWorkspacePage() {
                 </div>
 
                 <div className="p-4">
-                  <div className="mb-3" style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: '#6b7280' }}>
+                  <div className="mb-3 text-muted" style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em' }}>
                     Cakupan Saat Ini
                   </div>
                   <div className="d-flex flex-wrap gap-2 mb-4">

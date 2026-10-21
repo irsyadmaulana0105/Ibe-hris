@@ -2011,3 +2011,28 @@ html.dark .modal-backdrop,
 html.dark .offcanvas-backdrop {
   --bs-backdrop-opacity: 0.72;
 }
+
+/* Sidebar selalu berlatar hijau tua (lihat aturan `.sidebar` dengan !important di atas),
+   jadi teksnya harus terang juga di tema terang. Sebelumnya hanya html.dark yang diatur. */
+html:not(.dark) .sidebar-logo__title { color: #f1f7f8; }
+html:not(.dark) .sidebar-logo__subtitle,
+html:not(.dark) .sidebar-menu .menu-title { color: #a9c2c6; }
+html:not(.dark) .sidebar-menu a,
+html:not(.dark) .admin-menu-link { color: #d5e4e6; }
+html:not(.dark) .sidebar-menu a:hover,
+html:not(.dark) .sidebar-menu a.active,
+html:not(.dark) .admin-menu-link:hover,
+html:not(.dark) .admin-menu-link.active {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+
+/* Tombol .btn-dark (Buka Modul, Tambah Karyawan, dst.) hampir menyatu dengan kartu gelap
+   di tema malam. Beri warna aksen teal supaya batas tombol jelas; teks putih ±5,5:1. */
+html.dark .btn-dark {
+  background: #0f766e !important;
+  border-color: #14b8a6 !important;
+  color: #ffffff !important;
+}
+html.dark .btn-dark:hover:not(:disabled) { filter: brightness(1.12); }
