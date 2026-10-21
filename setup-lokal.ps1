@@ -68,6 +68,7 @@ try {
         $settings = [ordered]@{
             'APP_ENV' = 'local'; 'APP_DEBUG' = 'true'; 'APP_URL' = 'http://127.0.0.1:8000'
             'FRONTEND_URL' = 'http://localhost:5173'
+            'APP_LOCALE' = 'id'
             'DB_CONNECTION' = 'sqlite'
             'QUEUE_CONNECTION' = 'sync'; 'MAIL_MAILER' = 'log'; 'CACHE_STORE' = 'database'
             'FACE_ENGINE_DRIVER' = 'human'; 'FACE_ENGINE_URL' = 'http://127.0.0.1:3899'; 'FACE_ENGINE_TOKEN' = ''

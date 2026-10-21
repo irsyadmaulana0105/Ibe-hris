@@ -29,6 +29,9 @@ Baca sesuai kebutuhan: `docs/ARCHITECTURE.md` (alur dan hak akses), `docs/DATA_M
 - Perubahan kolom ENUM di migrasi dibungkus `if (DB::getDriverName() !== 'sqlite')`. SQLite lokal tidak menegakkan ENUM, jadi uji nilai status juga secara logika.
 - Frontend: halaman dimuat `lazy` di `src/App.tsx`; satu modul API per domain di `src/api/`; alias `@/` = `src/`; data server lewat TanStack Query. Bahasa antarmuka dan pesan galat: Indonesia.
 - Komentar dan teks pengguna ditulis dalam bahasa Indonesia yang jelas; ikuti gaya berkas di sekitarnya.
+- Geofence gagal-tertutup: bila ada lokasi kantor aktif, koordinat yang hilang ditolak, bukan dilewati. Jangan mengembalikan perilaku lama di `AttendanceService::checkGeofence`.
+- Cermin kamera hanya tampilan (CSS). Jangan membalik gambar yang dikirim ke server; itu mengubah data pencocokan wajah.
+- Tema: sidebar selalu hijau tua di kedua tema. Setiap warna teks baru harus diukur kontrasnya (≥ 4,5:1) di tema terang dan malam.
 
 ## Perintah
 
@@ -46,7 +49,7 @@ npx tsc -b           # cek tipe
 npm run build        # build produksi
 ```
 
-`npm run lint` belum berfungsi (tidak ada `eslint.config.js`). Empat uji di `InviteTokenApiTest` bisa gagal bila ada akses internet karena memakai kata sandi yang tercatat bocor; itu bukan regresi.
+`npm run lint` belum berfungsi (tidak ada `eslint.config.js`). Lima uji bisa gagal karena lingkungan, bukan regresi: empat di `InviteTokenApiTest` (kata sandi uji tercatat bocor, gagal bila ada internet) dan satu di `HardwarePushSecurityTest` (butuh PHP 8.4). Daftar temuan dan statusnya ada di `docs/TEMUAN.md`; cek di sana sebelum memperbaiki sesuatu yang mungkin sudah tercatat.
 
 ## Peta cepat
 
@@ -59,6 +62,7 @@ npm run build        # build produksi
 | Hak akses | `User.php` (`capabilities`), `EnterpriseAuthorizationService`, `app/Http/Middleware/` |
 | Lisensi modul | `ModuleEntitlementService`, `config/saas_modules.php` |
 | Tabel dan skema | `backend/database/migrations/`, `docs/DATA_MODEL.md` |
+| Masalah yang sudah diketahui | `docs/TEMUAN.md` |
 | Halaman React | `apps/attendance/src/pages/` (karyawan), `pages/admin/` (admin) |
 | Contoh pola pengajuan | Cuti: `LeaveController`, `LeaveService`, `LeaveApiTest`, `LeavePage.tsx`, `AdminLeavePage.tsx` |
 

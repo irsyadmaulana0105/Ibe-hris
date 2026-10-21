@@ -7,6 +7,7 @@ import { clockIn, clockOut, getTodayAttendance, getOfficeLocations } from '@/api
 import FeedbackAlert from '@/components/FeedbackAlert'
 import { MAX_CAPTURE_IMAGE_SIDE, MAX_FACE_CROP_SIDE, cropDetectedFaceToCanvas, drawVideoFrameToCanvas } from '@/utils/capture'
 import { getErrorMessage } from '@/utils/apiError'
+import { prepareFaceApiBackend } from '@/utils/faceApiBackend'
 
 function haversineMeters(lat1: number, lng1: number, lat2: number, lng2: number): number {
   const R = 6371000
@@ -125,6 +126,7 @@ export default function AttendancePage() {
     faceapiRef.current = faceapi
 
     if (!modelsLoaded) {
+      await prepareFaceApiBackend(faceapi)
       await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL)
       setModelsLoaded(true)
     }
@@ -482,7 +484,9 @@ export default function AttendancePage() {
       {capturedImage && (
         <div className="card mb-3">
           <div className="card-body text-center p-2">
-            <img src={capturedImage} alt="Selfie" style={{ width: '100%', maxWidth: 240, borderRadius: 12, objectFit: 'cover' }} />
+            {/* Dicerminkan agar sama dengan pratinjau kamera (.camera-video). Hanya tampilan:
+                capturedImage yang dikirim ke server tetap tidak dicerminkan. */}
+            <img src={capturedImage} alt="Selfie" style={{ width: '100%', maxWidth: 240, borderRadius: 12, objectFit: 'cover', transform: 'scaleX(-1)' }} />
             <div className="d-flex gap-2 mt-2 justify-content-center">
               <button onClick={() => setCapturedImage(null)} className="btn btn-sm btn-light">Ulangi Foto</button>
               {canClockIn && (

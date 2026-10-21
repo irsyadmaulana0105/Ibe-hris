@@ -119,9 +119,11 @@ class AttendanceController extends ApiController
         if (! $geo['allowed']) {
             $loc = $geo['location'];
             $dist = $geo['distance'];
-            $msg = $loc
-                ? "Anda berada {$dist} m dari {$loc->name} (radius {$loc->radius_meters} m). Harap absen dari lokasi kantor."
-                : 'Tidak ada lokasi kantor aktif di sekitar Anda.';
+            $msg = ($geo['reason'] ?? null) === 'no_coordinates'
+                ? 'Lokasi Anda tidak terbaca. Izinkan akses lokasi (GPS) lalu coba lagi.'
+                : ($loc
+                    ? "Anda berada {$dist} m dari {$loc->name} (radius {$loc->radius_meters} m). Harap absen dari lokasi kantor."
+                    : 'Tidak ada lokasi kantor aktif di sekitar Anda.');
             abort(422, $msg);
         }
 
@@ -176,9 +178,11 @@ class AttendanceController extends ApiController
         if (! $geo['allowed']) {
             $loc = $geo['location'];
             $dist = $geo['distance'];
-            $msg = $loc
-                ? "Anda berada {$dist} m dari {$loc->name} (radius {$loc->radius_meters} m). Harap absen dari lokasi kantor."
-                : 'Tidak ada lokasi kantor aktif di sekitar Anda.';
+            $msg = ($geo['reason'] ?? null) === 'no_coordinates'
+                ? 'Lokasi Anda tidak terbaca. Izinkan akses lokasi (GPS) lalu coba lagi.'
+                : ($loc
+                    ? "Anda berada {$dist} m dari {$loc->name} (radius {$loc->radius_meters} m). Harap absen dari lokasi kantor."
+                    : 'Tidak ada lokasi kantor aktif di sekitar Anda.');
             abort(422, $msg);
         }
 

@@ -7,6 +7,7 @@ Mulai dari [README utama](../README.md) untuk setup dan cara menjalankan. Dokume
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Anda ingin memahami bagaimana sistem bekerja sebelum mengubahnya | Komponen, alur permintaan, autentikasi, empat lapis hak akses, alur absensi dan verifikasi wajah, payroll, penyimpanan berkas privat, penerapan, jebakan |
 | [DATA_MODEL.md](DATA_MODEL.md) | Anda menambah kolom atau tabel, atau mencari di mana data disimpan | Konvensi, diagram relasi, tabel inti SDM, katalog modul lain, klasifikasi data sensitif, resep mengubah skema |
 | [VIBE_CODING.md](VIBE_CODING.md) | Anda mulai bekerja bersama asisten AI | Pekerjaan yang aman, resep tugas umum, templat perintah, daftar periksa |
+| [TEMUAN.md](TEMUAN.md) | Anda ingin tahu masalah yang sudah ditemukan, mana yang sudah diperbaiki, dan mana yang masih terbuka | Daftar temuan T1 sampai T13 dengan keparahan, penyebab, perbaikan, dan status |
 | [../backend/docs/REST_WEBHOOK_API.md](../backend/docs/REST_WEBHOOK_API.md) | Anda membuat integrasi | Kontrak REST JSON, idempotensi, webhook bertanda tangan |
 | [../backend/README.md](../backend/README.md) | Anda ingin tahu bagaimana backend dipasang di VPS | Setup, build, face-engine sebagai layanan, variabel lingkungan, troubleshooting |
 | [../apps/attendance/README.md](../apps/attendance/README.md) | Anda mengerjakan aplikasi React | Teknologi, daftar rute, variabel lingkungan, target penerapan |

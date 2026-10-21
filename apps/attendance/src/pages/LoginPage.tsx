@@ -10,7 +10,7 @@ export default function LoginPage() {
   const ssoRequired = isSsoRequired()
   const ssoPortalUrl = getSsoPortalUrl()
   // Prefer ?next= di URL → sessionStorage return_to (dari soft-logout modal)
-  // → default /platforms. Pakai useState supaya hanya di-resolve sekali di
+  // → default /dashboard. Pakai useState supaya hanya di-resolve sekali di
   // mount (read sessionStorage punya side effect cleanup).
   const [nextPath] = useState(() => {
     const urlNext = resolvePortalNextPath(searchParams.get('next'))
@@ -22,7 +22,9 @@ export default function LoginPage() {
         return stored
       }
     } catch { /* ignore */ }
-    return '/platforms'
+    // Bukan '/platforms': rute itu di App.tsx dialihkan kembali ke /login, sehingga
+    // setelah login berhasil pengguna terlempar ke halaman login lagi.
+    return '/dashboard'
   })
   const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')

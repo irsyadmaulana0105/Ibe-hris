@@ -118,7 +118,8 @@ Logika ada di `AttendanceService::clockIn` (status `present`/`late`/`off_shift`)
 | "Layanan verifikasi wajah sedang tidak tersedia" | Face-engine hidup? `curl http://127.0.0.1:3899/health` |
 | "Menunggu persetujuan admin" | Login admin, buka Approval Wajah, setujui. |
 | "Wajah tidak cocok" | Ambang `FACE_MATCH_SIMILARITY_THRESHOLD`, pencahayaan, jumlah wajah di foto. |
-| Absen tidak mau masuk karena lokasi | Ada `office_locations` aktif? Tanpa lokasi kantor, geofence tidak aktif. |
+| Absen tidak mau masuk karena lokasi | Ada `office_locations` aktif? Tanpa lokasi kantor, geofence tidak aktif. Bila ada, koordinat harus dikirim lengkap dan berada dalam radius; pesan "Lokasi Anda tidak terbaca" berarti koordinat tidak terkirim. |
+| Tampilan gelap/terang terlihat janggal | Ukur kontras teksnya (minimum 4,5:1). Ingat sidebar selalu berlatar hijau tua; aturan tema terang dan gelap ada di akhir `globals.css`. Lihat [TEMUAN.md](TEMUAN.md) T7. |
 | Status `off_shift` | Jam absen di luar jendela shift ±60 menit, atau shift salah. |
 
 ## 5. Templat perintah untuk asisten AI

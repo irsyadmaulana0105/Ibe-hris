@@ -19,6 +19,7 @@ Paket ini berasal dari branch `main` per 20 Oktober 2026 dan berjalan **sepenuhn
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Komponen sistem, alur permintaan, autentikasi, hak akses, alur absensi dan wajah, payroll, penerapan, jebakan |
 | [docs/DATA_MODEL.md](docs/DATA_MODEL.md) | Diagram relasi, tabel inti SDM, katalog modul lain, data sensitif, cara mengubah skema |
 | [docs/VIBE_CODING.md](docs/VIBE_CODING.md) | Apa yang aman dikerjakan, resep tugas, templat perintah untuk asisten AI, daftar periksa |
+| [docs/TEMUAN.md](docs/TEMUAN.md) | Masalah yang ditemukan saat paket dijalankan dan diuji, mana yang sudah diperbaiki dan mana yang masih terbuka |
 | [backend/docs/REST_WEBHOOK_API.md](backend/docs/REST_WEBHOOK_API.md) | Kontrak REST JSON dan webhook keluar |
 | [backend/README.md](backend/README.md) | Panduan backend dan penerapan VPS (konteks produksi) |
 | [apps/attendance/README.md](apps/attendance/README.md) | Panduan aplikasi absensi |
@@ -115,7 +116,7 @@ Alur mencoba absen wajah:
 2. Login sebagai **admin** (jendela samaran atau peramban lain) → **Approval Wajah** → Setujui.
 3. Kembali ke karyawan → **Absen Masuk**.
 
-Kamera hanya jalan di `localhost` atau HTTPS. Geofence tidak aktif selama belum ada lokasi kantor, sehingga absen bisa dilakukan dari mana saja.
+Kamera hanya jalan di `localhost` atau HTTPS. Geofence tidak aktif selama belum ada lokasi kantor, sehingga absen bisa dilakukan dari mana saja. Setelah ada lokasi kantor aktif, absen harus mengirim koordinat yang berada dalam radius kantor; tanpa koordinat, absen ditolak.
 
 Cek kesehatan face-engine: `curl http://127.0.0.1:3899/health`.
 
@@ -160,9 +161,12 @@ cd apps\attendance; npm run build                                   # pastikan b
 
 Skrip `npm run lint` di aplikasi absensi saat ini belum berfungsi (ESLint 9 tidak menemukan berkas konfigurasi `eslint.config.js`), jadi pemeriksaan otomatis sisi frontend hanya `tsc` dan `build`.
 
-`memory_limit=1G` diperlukan karena batas bawaan PHP di Windows (128 MB) tidak cukup untuk seluruh suite. Hasil yang dinyatakan untuk paket ini: 477 lulus, 1 dilewati (uji konfigurasi server yang tidak ikut paket).
+`memory_limit=1G` diperlukan karena batas bawaan PHP di Windows (128 MB) tidak cukup untuk seluruh suite. Hasil terakhir (21 Oktober 2026, setelah lima uji geofence ditambahkan): 477 lulus, 1 dilewati (uji konfigurasi server yang tidak ikut paket), dan 5 gagal karena lingkungan penguji, bukan karena kode:
 
-Satu catatan dari pengujian ulang di lingkungan lain: empat uji di `InviteTokenApiTest` memakai kata sandi `newpassword123`, sedangkan aplikasi menolak kata sandi yang pernah bocor lewat pemeriksaan ke API publik. Pada mesin yang bisa menjangkau API tersebut, keempat uji itu gagal karena kata sandi ujinya termasuk yang bocor, bukan karena kode Anda. Bila ini terjadi pada Anda, abaikan kegagalan tersebut atau jalankan uji tanpa internet.
+- Empat uji di `InviteTokenApiTest` memakai kata sandi `newpassword123` dan sejenisnya, sedangkan aplikasi menolak kata sandi yang pernah bocor lewat pemeriksaan ke API publik. Pada mesin yang bisa menjangkau API tersebut, keempatnya gagal. Abaikan, atau jalankan uji tanpa internet.
+- Satu uji di `HardwarePushSecurityTest` memakai fungsi yang baru ada di PHP 8.4, jadi gagal di PHP 8.3 dan lulus di 8.4.
+
+Daftar lengkap temuan dan statusnya ada di [docs/TEMUAN.md](docs/TEMUAN.md).
 
 Setiap perubahan absensi wajib disertai uji di `backend/tests/Feature/Api/`. Lihat `AttendanceApiTest.php` dan `FaceAuditTest.php` sebagai contoh.
 
@@ -205,3 +209,10 @@ Zip folder `patch-hris` dan kirim bersama penjelasan singkat apa yang diubah dan
 | Seeder menolak berjalan | Set `IBE_ALLOW_DEMO_ADMIN_SEEDING=YES-I-UNDERSTAND` dan tiga sandi demo (minimal 20 karakter) di `backend/.env`. |
 | Build frontend gagal dengan pesan "Expected exactly two third-party browser fallbacks" | Pemeriksaan di `vite.config.ts` mendeteksi perubahan jumlah URL cadangan `http://localhost` pada bundel, misalnya setelah menambah atau memperbarui pustaka. Telaah penyebabnya dengan tim sebelum mengubah angka pemeriksaan. |
 | Uji kehabisan memori | Jalankan Pest dengan `php -d memory_limit=1G`. |
+| Skrip setup berhenti dengan "Ekstensi PHP 'intl' belum aktif" (atau gd, zip, dst.) | Ekstensi belum dinyalakan di `php.ini`. Jalankan `php --ini` untuk melihat berkas mana yang dibaca, hapus tanda `;` di depan `extension=intl` (dan ekstensi lain yang diminta), pastikan `extension_dir` menunjuk ke folder `ext` milik PHP itu, lalu buka PowerShell baru. Periksa dengan `php -r "var_dump(extension_loaded('intl'));"`. Bila `php_intl.dll` tidak ada di folder `ext`, pasang PHP 8.4 Thread Safe (zip) dari windows.php.net atau Laravel Herd. |
+| Setelah login, layar kembali ke halaman login | Bug versi lama (tujuan bawaan `/platforms` dialihkan ke `/login`), sudah diperbaiki. Pada versi lama, buka `http://localhost:5173/dashboard` setelah login. |
+| Pesan galat validasi berbahasa Inggris | Tambahkan `APP_LOCALE=id` di `backend/.env` yang sudah ada (skrip setup hanya menulisnya untuk instalasi baru), lalu `php artisan config:clear`. |
+| Kamera: "Requested device not found" | Peramban tidak menemukan kamera: komputer tanpa webcam (misalnya PC desktop atau desktop jarak jauh), kamera dimatikan di Settings → Privacy & security → Camera, atau sedang dipakai aplikasi lain. |
+| Kamera: "backend 'wasm' has not yet been initialized" | Bug versi lama bila WebGL tidak tersedia; sudah diperbaiki ([docs/TEMUAN.md](docs/TEMUAN.md) T13). Perbarui ke versi terbaru. |
+| "Lokasi Anda tidak terbaca" saat absen | Ada lokasi kantor aktif, tetapi koordinat tidak terkirim. Izinkan akses lokasi di peramban. |
+| Kode QR di Edit Profil tidak tampil | Diketahui, hanya saat lokal; lihat [docs/TEMUAN.md](docs/TEMUAN.md) T3. |

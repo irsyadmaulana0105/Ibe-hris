@@ -6,6 +6,7 @@ import { setupFace } from '@/api/auth'
 import FeedbackAlert from '@/components/FeedbackAlert'
 import { MAX_CAPTURE_IMAGE_SIDE, MAX_FACE_CROP_SIDE, cropDetectedFaceToCanvas, drawVideoFrameToCanvas } from '@/utils/capture'
 import { getErrorMessage } from '@/utils/apiError'
+import { prepareFaceApiBackend } from '@/utils/faceApiBackend'
 
 const MODEL_URL = '/models'
 
@@ -96,6 +97,7 @@ export default function FaceSetupPage() {
       if (!faceapi) {
         faceapi = await import('@vladmandic/face-api')
         faceapiRef.current = faceapi
+        await prepareFaceApiBackend(faceapi)
         await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL)
       }
 

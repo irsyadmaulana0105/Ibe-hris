@@ -4,6 +4,7 @@ use App\Models\Attendance;
 use App\Models\Company;
 use App\Models\Division;
 use App\Models\JobTitle;
+use App\Models\OfficeLocation;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
@@ -186,6 +187,93 @@ it('rejects sales mobile attendance when gps evidence is stale or imprecise', fu
     ], bearerHeaders($token))
         ->assertUnprocessable()
         ->assertJsonPath('message', 'Akurasi lokasi harus 100 meter atau lebih baik. Aktifkan GPS presisi lalu coba lagi.');
+});
+
+function activeOfficeFor(User $user): OfficeLocation
+{
+    return OfficeLocation::withoutGlobalScopes()->create([
+        'company_id' => $user->company_id,
+        'name' => 'Kantor Uji',
+        'address' => 'Jakarta',
+        'latitude' => -6.2,
+        'longitude' => 106.8,
+        'radius_meters' => 100,
+        'is_active' => true,
+    ]);
+}
+
+it('rejects clock in outside the office radius', function () {
+    [$user, $token] = employeeWithToken(['face_descriptor' => descriptorJson(0.10)]);
+    activeOfficeFor($user);
+
+    $this->postJson('/api/v1/attendances/clock-in', [
+        'selfie_base64' => fakeSelfie(),
+        'latitude' => -7.2575,
+        'longitude' => 112.7521,
+    ], bearerHeaders($token))->assertUnprocessable();
+
+    expect(Attendance::count())->toBe(0);
+});
+
+it('rejects clock in without coordinates when the company has an active office', function () {
+    [$user, $token] = employeeWithToken(['face_descriptor' => descriptorJson(0.10)]);
+    activeOfficeFor($user);
+
+    $this->postJson('/api/v1/attendances/clock-in', [
+        'selfie_base64' => fakeSelfie(),
+    ], bearerHeaders($token))
+        ->assertUnprocessable()
+        ->assertJsonPath('message', 'Lokasi Anda tidak terbaca. Izinkan akses lokasi (GPS) lalu coba lagi.');
+
+    expect(Attendance::count())->toBe(0);
+});
+
+it('rejects clock in when only one coordinate is sent and the company has an active office', function () {
+    [$user, $token] = employeeWithToken(['face_descriptor' => descriptorJson(0.10)]);
+    activeOfficeFor($user);
+
+    $this->postJson('/api/v1/attendances/clock-in', [
+        'selfie_base64' => fakeSelfie(),
+        'latitude' => -6.2,
+    ], bearerHeaders($token))
+        ->assertUnprocessable()
+        ->assertJsonPath('message', 'Lokasi Anda tidak terbaca. Izinkan akses lokasi (GPS) lalu coba lagi.');
+
+    expect(Attendance::count())->toBe(0);
+});
+
+it('still allows clock in without coordinates when the company has no active office', function () {
+    [$user, $token] = employeeWithToken(['face_descriptor' => descriptorJson(0.10)]);
+
+    Http::fake([
+        rtrim((string) config('face.engine_url'), '/').'/compare' => Http::response([
+            'matched' => true,
+            'similarity' => 0.82,
+            'faceCount' => 1,
+        ], 200),
+    ]);
+
+    $this->postJson('/api/v1/attendances/clock-in', [
+        'selfie_base64' => fakeSelfie(),
+    ], bearerHeaders($token))->assertCreated();
+});
+
+it('rejects clock out without coordinates when the company has an active office', function () {
+    [$user, $token] = employeeWithToken(['face_descriptor' => descriptorJson(0.10)]);
+    activeOfficeFor($user);
+
+    Attendance::create([
+        'user_id' => $user->id,
+        'date' => now()->toDateString(),
+        'time_in' => '08:00:00',
+        'status' => 'present',
+    ]);
+
+    $this->postJson('/api/v1/attendances/clock-out', [
+        'selfie_base64' => fakeSelfie(),
+    ], bearerHeaders($token))
+        ->assertUnprocessable()
+        ->assertJsonPath('message', 'Lokasi Anda tidak terbaca. Izinkan akses lokasi (GPS) lalu coba lagi.');
 });
 
 it('rejects clock out when engine says face does not match', function () {

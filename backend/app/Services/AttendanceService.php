@@ -201,7 +201,12 @@ class AttendanceService
 
     /**
      * Check if GPS coords are within any active office location.
-     * Returns ['allowed' => bool, 'location' => ?OfficeLocation, 'distance' => float].
+     * Returns ['allowed' => bool, 'location' => ?OfficeLocation, 'distance' => float],
+     * ditambah 'reason' => 'no_coordinates' bila ditolak karena koordinat tidak lengkap.
+     *
+     * Perusahaan tanpa lokasi kantor aktif belum mengatur geofence, jadi tidak dibatasi.
+     * Bila ada kantor aktif, koordinat yang hilang TIDAK boleh dianggap lolos: tanpa itu,
+     * pemanggil API bisa melewati batas lokasi hanya dengan tidak mengirim latitude/longitude.
      */
     public function checkGeofence(User $user, ?float $lat, ?float $lng): array
     {
@@ -214,8 +219,12 @@ class AttendanceService
             ->where('is_active', true)
             ->get();
 
-        if ($locations->isEmpty() || $lat === null || $lng === null) {
+        if ($locations->isEmpty()) {
             return ['allowed' => true, 'location' => null, 'distance' => 0];
+        }
+
+        if ($lat === null || $lng === null) {
+            return ['allowed' => false, 'location' => null, 'distance' => 0, 'reason' => 'no_coordinates'];
         }
 
         $nearest = null;
